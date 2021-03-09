@@ -1,0 +1,127 @@
+<!DOCTYPE html> 
+<html lang="en" dir="ltr"> 
+
+<head> 
+<meta charset="utf-8"> 
+<title>charts</title> 
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"> 
+
+<!-- jQuery library -->
+
+<!-- Latest compiled JavaScript -->
+<script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/ui/1.11.4/jquery-ui.js" integrity="sha256-DI6NdAhhFRnO2k51mumYeDShet3I8AKCQf/tf7ARNhI=" crossorigin="anonymous"></script>
+
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script> 
+
+<!-- Latest Chartjs -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js" type="text/javascript"></script> 
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script> 
+<script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.11.2/moment.min.js"></script>
+</head> 
+<body class="container-fluid"> 
+  <br><br><br>
+
+<!--Here Graph Will Be Showing On Index Page-->
+
+<canvas id="canvas"></canvas>
+</body>
+<script>
+					chartIt();
+							Date_ = [];
+							Time = [];
+							//Time.slice(0,5)
+							console.log(Time.slice(0,5))
+							yleftLabel = [];
+							yrightLabel = [];
+		                   async function chartIt(){ 
+                                await getData();
+                                const ctx = document.getElementById('canvas').getContext('2d');
+                                var myChart = new Chart(ctx, {
+                                    type: 'line',
+                                    data: {
+                                labels: Date_,
+                                datasets: [{
+                                    label: 'Temperature',
+                                    fill: false,
+                                    borderColor: 'rgb(255, 159, 64)',
+                                    backgroundColor: 'rgb(255, 159, 64)',
+                                    yAxisID: 'left-y-axis',
+                                    data: yleftLabel,
+                                },
+                                { 
+                                    label: 'Humudity',
+                                    fill: false,
+                                    borderColor: 'rgb(75, 192, 192)',
+                                    backgroundColor: 'rgb(75, 192, 192)',
+                                    yAxisID: 'right-y-axis',
+                                    data: yrightLabel,
+                                }],
+                        }, 
+                                    options: {
+                                    responsive: true,
+                                    hoverMode: 'index',
+                                    stacked: false,
+                                    title: {
+                                    display: true,
+                                    text: 'Temperature & Humidity',
+                                       },
+                                    scales:{
+                                        xAxes: {
+                                            type:'time',
+                                            displayFormats: {
+                                                week:'ll'
+                                        }
+                                        },
+                                        yAxes: [{
+                                    id : 'left-y-axis',
+                                    type : 'linear',
+                                    ticks: {
+                                    beginAtZero: true
+                                },
+                                    display:true,
+                                    position: 'left',
+                                }, {
+                                    id: 'right-y-axis',
+                                    display: true,
+                                    type: 'linear',
+                                    ticks: {
+                                    beginAtZero: true
+                                },
+                                    position: 'right',
+                                    gridLines:{
+                                        drawOnChartArea: false,
+                                    },
+                                }]
+                                }
+                            }
+                            });
+                            }
+
+			        getData();
+					async function getData(){
+						const response = await fetch('excel_data.csv');
+						const data = await response.text();
+		//				console.log(data)
+						const cols = [];
+						const date = [];
+						const time = [];
+						const table = data.split('\n').slice(1);
+						table.forEach(row => {
+							const cols = row.split(',');
+							const date = cols[0];
+							Date_.push(date);
+							const time = cols[2];
+							Time.push(time);
+							const temp = cols[6];
+							yleftLabel.push(temp);
+							const hum = cols[7];
+							yrightLabel.push(hum);
+						});
+							//console.log(time.slice(0,3));
+					}
+</script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script> 
+</html> 

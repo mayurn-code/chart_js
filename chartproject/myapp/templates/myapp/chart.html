@@ -1,0 +1,58 @@
+{% extends "myapp/base.html" %}
+
+{% block title%}Temperature{% endblock title %}
+
+{% block scripts %}
+<script>
+$(document).ready(function(){
+    var obj = document.getElementById('myChart').getContext('2d');
+    var myChart = new Chart(obj, {
+    type: 'line',
+    data: {
+        labels: [{% for i in data %}"{{i.date_time}}",{% endfor %}],
+        datasets: [{
+            label: 'temperature %',
+            borderColor: 'blue',
+            fillColor:'pink',
+            pointColor:'purple',
+            yAxisID: "y-axis-1",
+            data: [{% for i in data %}"{{i.temperature}}",{% endfor %}],
+        },
+        {
+            label:"New Humudity %",
+            borderColor:'green',
+            fillColor:'orange',
+            strokeColor:'blue',
+            pointColor:'red',
+            yAxisID:"y-axis-2",
+            data: [{% for i in data %}"{{i.humidity}}",{% endfor %}],
+        },
+        ],
+        
+    },
+    options: {
+      responsive: false,
+        scales: {
+            yAxis: [{
+                id: 'y-axis-1',
+                type: 'linear',
+                position: 'left',
+            },
+            {
+                id: 'y-axis-2',
+                type: 'linear',
+                position: 'right',
+            }
+            ]
+        }
+    }
+    });
+    });
+</script>
+
+{% endblock scripts %}
+
+{% block content %}
+<canvas id="myChart" aria-label="chart" role="img" width="1000" height="550"></canvas>
+{% endblock content %}
+
